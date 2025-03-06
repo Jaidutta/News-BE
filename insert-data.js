@@ -4,15 +4,15 @@ const { createReferenceObject, convertTimestampToDate } = require("./db/seeds/ut
 
 function insertTopics(topics) {
   const formattedTopics = topics.map((topic) => [
-    topic.slug,
     topic.description,
+    topic.slug,
     topic.img_url,
   ]);
 
   const insertTopicsQuery = format(
-    `INSERT INTO topics (slug, description, img_url)
+    `INSERT INTO topics ( description, slug, img_url)
      VALUES %L RETURNING *;`,
-    formattedTopics
+     formattedTopics
   );
 
   return db.query(insertTopicsQuery);
@@ -34,20 +34,20 @@ function insertUsers(users) {
   return db.query(insertUsersQuery);
 }
 
-function insertArticles(articles, usersRows) {
+function insertArticles(articles) {
   
-  const userRef = createReferenceObject(usersRows, "username", "username");
+ // const userRef = createReferenceObject(usersRows, "username", "username");
 
   const formattedArticles = articles.map((article) => {
-    const formattedArticle = convertTimestampToDate(article);
+    const formattedTimeStamp = convertTimestampToDate(article);
     return [
-      formattedArticle.article_title, 
-      formattedArticle.topic,
-      userRef[formattedArticle.author], 
-      formattedArticle.body,
-      formattedArticle.created_at, 
-      formattedArticle.votes,
-      formattedArticle.article_img_url,
+      article.title,
+      article.topic,
+      article.author,
+      article.body,
+      formattedTimeStamp.created_at, 
+      article.votes,
+      article.article_img_url
     ];
   });
 
@@ -69,9 +69,9 @@ function insertComments(comments, articlesRows) {
     const formattedComment = convertTimestampToDate(comment);
     return [
       articleRef[formattedComment.article_title], 
-      formattedComment.body,
-      formattedComment.votes,
-      formattedComment.author,
+      comment.body,
+      comment.votes,
+      comment.author,
       formattedComment.created_at, 
     ];
   });

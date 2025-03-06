@@ -7,21 +7,21 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => createTables())
     .then(() => insertTopics(topicData))
     .then(({ rows: topicsRows }) => {
-      console.log("Topics inserted:", topicsRows);
+      console.log("<<< Topics inserted:", topicsRows);
 
       return insertUsers(userData);
     })
     .then(({rows: usersRows}) => {
-      // console.log("Users inserted:", usersRows);
+      console.log("<<<< Users inserted:", usersRows);
 
-      return insertArticles(articleData, usersRows);
+      return insertArticles(articleData);
     })
     .then(({rows: articleRows}) => {
-      // console.log("articles inserted:", articleRows);
-      insertComments(commentData, articleRows)
+      console.log("<< articles inserted:", articleRows);
+      return insertComments(commentData, articleRows)
     })
     .then(({rows: commentRows}) => {
-      console.log("articles comment:", commentRows);
+      console.log("<< comment inserted:", commentRows);
       
     })
     .catch((error) => {
