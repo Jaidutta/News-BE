@@ -38,26 +38,17 @@ describe("articles api", () => {
         .then(({ body:{ article } }) => {
           const {article_id, title, topic, author, body, created_at, votes, article_img_url} = article
           expect(article_id).toBe(2);
-          expect(typeof title).toBe("string");
+
           expect(title).toBe("Sony Vaio; or, The Laptop");
-
-          expect(typeof topic).toBe("string");
           expect(topic).toBe("mitch");
-
-          expect(typeof author).toBe("string");
           expect(author).toBe("icellusedkars");
-         
-          expect(typeof body).toBe("string");
           expect(body).toBe("Call me Mitchell. Some years ago..");
 
           const createdAtDate = new Date(created_at);
           expect(createdAtDate).toBeInstanceOf(Date);
           expect(createdAtDate).not.toBeNull();
           
-          expect(typeof votes).toBe("number");
           expect(votes).toBe(0);
-
-          expect(typeof article_img_url).toBe("string");
           expect(article_img_url).toBe("https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
 
         });

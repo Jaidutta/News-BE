@@ -9,6 +9,8 @@ function dropTables() {
 };
 
 function createTables() {
+  console.log("Creating tables...");
+
   return db
     .query(`
       CREATE TABLE topics (
@@ -17,17 +19,19 @@ function createTables() {
         img_url VARCHAR(1000) NOT NULL
       );
     `)
-    .then(() =>
-      db.query(`
+    .then(() => {
+      console.log("Topics table created");
+      return db.query(`
         CREATE TABLE users (
           username VARCHAR(50) PRIMARY KEY,
           name VARCHAR(50) NOT NULL,
           avatar_url VARCHAR(1000) NOT NULL
         );
-      `)
-    )
-    .then(() =>
-      db.query(`
+      `);
+    })
+    .then(() => {
+      console.log("Users table created");
+      return db.query(`
         CREATE TABLE articles (
           article_id SERIAL PRIMARY KEY,
           title VARCHAR(150) NOT NULL,
@@ -38,10 +42,11 @@ function createTables() {
           votes INT DEFAULT 0,
           article_img_url VARCHAR(1000) NOT NULL
         );
-      `)
-    )
-    .then(() =>
-      db.query(`
+      `);
+    })
+    .then(() => {
+      console.log("Articles table created");
+      return db.query(`
         CREATE TABLE comments (
           comment_id SERIAL PRIMARY KEY,
           article_id INT REFERENCES articles(article_id) ON DELETE CASCADE,
@@ -50,8 +55,15 @@ function createTables() {
           author VARCHAR(50) REFERENCES users(username) ON DELETE CASCADE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-      `)
-    );
-};
-
+      `);
+    })
+    .then(() => {
+      console.log("Comments table created");
+      console.log("All tables created successfully");
+    })
+    .catch((err) => {
+      console.error("Error creating tables:", err);
+      throw err;
+    });
+}
 module.exports = { dropTables, createTables }
