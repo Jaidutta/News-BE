@@ -28,7 +28,7 @@ describe("GET /api", () => {
   });
 });
 
-describe.only("topics api", () => {
+describe("topics api", () => {
   describe("/api/topics", () => {
     test("GET 200: responds with an array of topic objects having properties    slug and description", () => {
       return request(app)
@@ -43,15 +43,18 @@ describe.only("topics api", () => {
           })
         });
     })
-    test("404: responds with an error message if endpoint not found", () => {
-      return request(app)
-        .get("/api/tooopicsss")
-        .expect(404)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Path Not Found");
-         
-        });
-    })
 
+  })
+})
+
+describe("Path Not Found Error Handler", () => {
+  test("404: responds with an error message if endpoint not found", () => {
+    return request(app)
+      .get("/api/tooopicsss")
+      .expect(404)
+      .then(({body: {msg}}) => {
+       expect(msg).toBe("Path Not Found");
+       
+      });
   })
 })
