@@ -26,6 +26,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     })
     .catch((error) => {
       console.error("Error during seeding process:", error);
+      throw error;
     });
 };
 module.exports = seed;

@@ -47,6 +47,54 @@ describe("topics api", () => {
   })
 })
 
+describe("articles api", () => {
+  describe("/api/articles/:article_id", () => {
+    test("GET 200: responds with an article object", () => {
+      return request(app)
+        .get("/api/articles/2")
+        .expect(200)
+        .then(({ body:{ article } }) => {
+          const {article_id, title, topic, author, body, created_at, votes, article_img_url} = article
+          expect(article_id).toBe(2);
+
+          expect(title).toBe("Sony Vaio; or, The Laptop");
+          expect(topic).toBe("mitch");
+          expect(author).toBe("icellusedkars");
+          expect(body).toBe("Call me Mitchell. Some years ago..");
+
+          const createdAtDate = new Date(created_at);
+          expect(createdAtDate).toBeInstanceOf(Date);
+          expect(createdAtDate).not.toBeNull();
+          
+          expect(votes).toBe(0);
+          expect(article_img_url).toBe("https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
+
+        });
+    })
+    test("404: responds with an error message if the id is NOT found in the database", () => {
+      return request(app)
+        .get("/api/articles/99999999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("not found");
+
+        });
+    })
+
+    test("400, responds with an error message if the id is of invalid data type", () => {
+      return request(app)
+        .get("/api/articles/banana")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("bad request");
+
+        });
+
+    })
+
+  })
+})
+
 describe("Path Not Found Error Handler", () => {
   test("404: responds with an error message if endpoint not found", () => {
     return request(app)

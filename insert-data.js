@@ -31,7 +31,11 @@ function insertUsers(users) {
     formattedUsers
   );
 
-  return db.query(insertUsersQuery);
+  return db.query(insertUsersQuery)
+    .catch(err => {
+      console.error('Error inserting users:', err);
+      throw err;
+    })
 }
 
 function insertArticles(articles) {
@@ -67,8 +71,12 @@ function insertComments(comments, articlesRows) {
 
   const formattedComments = comments.map((comment) => {
     const formattedComment = convertTimestampToDate(comment);
+    const articleTitle = formattedComment.article_title;
+    const articleId = articleRef[articleTitle];
+
+    console.log(`Attempting to insert comment for article: ${articleTitle}, ID: ${articleId}`);
     return [
-      articleRef[formattedComment.article_title], 
+      articleId, 
       comment.body,
       comment.votes,
       comment.author,
@@ -82,7 +90,10 @@ function insertComments(comments, articlesRows) {
     formattedComments
   );
 
-  return db.query(insertCommentsQuery);
+  return db.query(insertCommentsQuery)
+            .catch((err)=>{
+              console.log(err, "Error when inserting comments");
+            });
 }
 
  
