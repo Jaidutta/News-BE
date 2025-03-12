@@ -11,7 +11,6 @@ beforeEach(() => {
   return seed(data);
 });
 
-
 afterAll(() => {
   return db.end();
 });
@@ -24,10 +23,29 @@ describe("GET /api", () => {
       .then(({ body }) => {
         expect(body).toHaveProperty("endpoints");
         expect(body.endpoints).toEqual(endpointsJson);
-        expect(typeof body.endpoints).toBe("object"); 
+        expect(typeof body.endpoints).toBe("object");
       });
   });
 });
+
+describe("topics api", () => {
+  describe("/api/topics", () => {
+    test("GET 200: responds with an array of topic objects having properties    slug and description", () => {
+      return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then(({ body: { topics } }) => {
+          expect(topics.length).toBe(3);
+          topics.forEach(topic => {
+            const { slug, description } = topic
+            expect(typeof slug).toBe("string")
+            expect(typeof description).toBe("string")
+          })
+        });
+    })
+
+  })
+})
 
 describe("articles api", () => {
   describe("/api/articles/:article_id", () => {
@@ -74,5 +92,17 @@ describe("articles api", () => {
 
     })
 
+  })
+})
+
+describe("Path Not Found Error Handler", () => {
+  test("404: responds with an error message if endpoint not found", () => {
+    return request(app)
+      .get("/api/tooopicsss")
+      .expect(404)
+      .then(({body: {msg}}) => {
+       expect(msg).toBe("Path Not Found");
+       
+      });
   })
 })
