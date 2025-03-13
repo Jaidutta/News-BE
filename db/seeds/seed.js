@@ -22,6 +22,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     })
     .then(({rows: commentRows}) => {
       console.log("<< comment inserted:", commentRows);
+      return;
       
     })
     .catch((error) => {
