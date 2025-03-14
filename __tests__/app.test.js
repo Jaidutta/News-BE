@@ -400,6 +400,39 @@ describe("articles api", () => {
   })
 })
 
+describe("comments api", () => {
+  describe("/api/comments/:comment_id", () => {
+    describe("Happy Path", () => {
+      test("DELETE 204: deletes the comment and responds with no content", () => {
+        return request(app)
+          .delete("/api/comments/1")
+          .expect(204);
+      });
+    });
+
+    describe("Error Handling", () => {
+      test("DELETE 404: responds with an error when comment_id does not exist", () => {
+        const comment_id = 99999
+        return request(app)
+          .delete(`/api/comments/${comment_id}`)
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(`Comment ${comment_id} not found`);
+          });
+      });
+
+      test("DELETE 400: responds with an error when comment_id is invalid", () => {
+        return request(app)
+          .delete("/api/comments/banana")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("bad request");
+          });
+      });
+    });
+  });
+});
+
 describe("Path Not Found Error Handler", () => {
   test("404: responds with an error message if endpoint not found", () => {
     return request(app)
