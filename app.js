@@ -10,7 +10,8 @@ const { getAllTopics } = require("./controllers/topics.controllers");
 
 const {
   getCommentsByArticleId, 
-  postCommentByArticleId
+  postCommentByArticleId,
+  deleteCommentById
 } = require("./controllers/comments.controllers");
 
 const {
@@ -33,7 +34,9 @@ app.get("/api/articles/:article_id", getArticleById);
 app.patch('/api/articles/:article_id', patchArticleVotes);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-app.post("/api/articles/:article_id/comments", postCommentByArticleId)
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.delete('/api/comments/:comment_id', deleteCommentById);
 
 app.all("/*", handleNonExistentEndpoint);
 
