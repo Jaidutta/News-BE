@@ -1,7 +1,13 @@
 const express = require("express");
 const { getApi } = require("./controllers/api.controllers");
-const { getAllArticles, getArticleById } = require("./controllers/articles.controllers");
+const { 
+  getAllArticles, 
+  getArticleById
+} = require("./controllers/articles.controllers");
+
 const { getAllTopics } = require("./controllers/topics.controllers");
+
+const {getCommentsByArticleId} = require("./controllers/comments.controllers");
 
 const {
   handleCustomErrors,
@@ -19,6 +25,8 @@ app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.all("/*", handleNonExistentEndpoint);
 
