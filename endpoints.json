@@ -121,5 +121,22 @@
           "conditions": "when the username does not exist in the database"
         }
       ]   
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates an article's votes by article_id",
+    "queries": [],
+    "exampleRequest": { "inc_votes": 10 },
+    "exampleResponse": {
+      "article": {
+          "article_id": 1,
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 110,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-gazette-158651.jpeg?w=700&h=700"
+      }
+    }
   }
 }

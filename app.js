@@ -2,7 +2,8 @@ const express = require("express");
 const { getApi } = require("./controllers/api.controllers");
 const { 
   getAllArticles, 
-  getArticleById
+  getArticleById,
+  patchArticleVotes
 } = require("./controllers/articles.controllers");
 
 const { getAllTopics } = require("./controllers/topics.controllers");
@@ -28,11 +29,10 @@ app.get("/api", getApi);
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/articles", getAllArticles);
-
 app.get("/api/articles/:article_id", getArticleById);
+app.patch('/api/articles/:article_id', patchArticleVotes);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-
 app.post("/api/articles/:article_id/comments", postCommentByArticleId)
 
 app.all("/*", handleNonExistentEndpoint);

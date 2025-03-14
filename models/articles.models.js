@@ -34,3 +34,23 @@ exports.queryArticlesById = id => {
       return rows[0];
     });
 };
+
+exports.queryUpdateArticleVotes = (article_id, inc_votes) => {
+  return db
+      .query(
+          `
+          UPDATE articles 
+          SET votes = votes + $1 
+          WHERE article_id = $2 
+          RETURNING *,
+              (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id)::int AS comment_count
+          `,
+          [inc_votes, article_id]
+      )
+      .then(({ rows }) => {
+          if (rows.length === 0) {
+              return Promise.reject({ status: 404, msg: `Article ${article_id} not found` });
+          }
+          return rows[0]; 
+      })
+}
