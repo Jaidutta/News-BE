@@ -311,6 +311,92 @@ describe("articles api", () => {
         });
       });
     });
+
+    describe('PATCH /api/articles/:article_id', () => {
+      describe('Happy Path', () => {
+          test('PATCH 200: updates the article votes and returns the updated article', () => {
+              const payload = { inc_votes: 10 };
+              return request(app)
+                  .patch('/api/articles/1')
+                  .send(payload)
+                  .expect(200)
+                  .then(({ body: { article } }) => {                    
+                    const {votes, article_id, title, topic, author, created_at, article_img_url, comment_count} = article;
+
+                      expect(votes).toBe(110); 
+                      expect(typeof article_id).toBe("number");
+                      expect(typeof title).toBe("string");
+                      expect(typeof topic).toBe("string");
+                      expect(typeof author).toBe("string");
+          
+                      const createdAtDate = new Date(created_at);
+                      expect(createdAtDate).toBeInstanceOf(Date);
+                      expect(createdAtDate).not.toBeNull();
+          
+                      expect(typeof article_img_url).toBe("string");
+                      expect(typeof comment_count).toBe("number");
+                  });
+          });
+  
+          test('PATCH 200: updates the article votes and returns the updated article with negative votes', () => {
+              const payload = { inc_votes: -50 };
+              return request(app)
+                  .patch('/api/articles/1')
+                  .send(payload)
+                  .expect(200)
+                  .then(({ body: { article } }) => {
+                      expect(article.votes).toBe(50);
+                  });
+          });
+      });
+  
+      describe('Error Handling', () => {
+          test('PATCH 404: responds with an error when article_id does not exist', () => {
+              const payload = { inc_votes: 10 };
+              const invalidId = 99999
+              return request(app)
+                  .patch(`/api/articles/${invalidId}`)
+                  .send(payload)
+                  .expect(404)
+                  .then(({ body: { msg } }) => {
+                      expect(msg).toBe(`The Article id: ${invalidId} does NOT exist`);
+                  });
+          });
+  
+          test('PATCH 400: responds with an error when inc_votes is missing', () => {
+              const payload = {};
+              return request(app)
+                  .patch('/api/articles/1')
+                  .send(payload)
+                  .expect(400)
+                  .then(({ body: { msg } }) => {
+                      expect(msg).toBe('inc_votes is required');
+                  });
+          });
+  
+          test('PATCH 400: responds with an error when inc_votes is not a number', () => {
+              const payload = { inc_votes: 'Incorrect Data type' };
+              return request(app)
+                  .patch('/api/articles/1')
+                  .send(payload)
+                  .expect(400)
+                  .then(({ body: { msg } }) => {
+                      expect(msg).toBe('inc_votes must be a number');
+                  });
+          });
+  
+          test('PATCH 400: responds with an error when article_id is invalid', () => {
+              const payload = { inc_votes: 10 };
+              return request(app)
+                  .patch('/api/articles/banana')
+                  .send(payload)
+                  .expect(400)
+                  .then(({ body: { msg } }) => {
+                      expect(msg).toBe('bad request');
+                  });
+          });
+      });
+  });
   })
 })
 
