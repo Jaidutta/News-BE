@@ -10,3 +10,11 @@ exports.queryUserByUsername = (username) => {
             return rows[0]; 
         });
 };
+
+exports.queryAllUsers = () => {
+  return db.query(`
+    SELECT username, name, avatar_url FROM users`)
+    .then(({ rows }) => {
+      return rows;
+    });
+};
