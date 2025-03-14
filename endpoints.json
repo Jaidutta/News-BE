@@ -66,5 +66,60 @@
         }
       ]
     }
+  }, 
+  
+  "POST /api/articles/:article_id/comments": {
+      "description": "allows a user to post a comment on an article with a given id",
+      "queries": [],
+      "expectedRequestBody": {
+        "username": "string (required)",
+        "body": "string (required)"
+      },
+      "exampleRequest": {
+        "username": "lurker",
+        "body": "This is a new comment"
+      },
+      "exampleResponse": {
+        "comment": {
+          "comment_id": 1,
+          "votes": 0,
+          "created_at": "2023-10-05T12:34:56.789Z",
+          "author": "lurker",
+          "body": "This is a new comment",
+          "article_id": 5
+        }
+      },
+      "errorResponses": [
+        {
+          "status": 400,
+          "message": "missing required fields",
+          "conditions": "when username or body is missing from the request body"
+        },
+        {
+          "status": 400,
+          "message": "username and body cannot be empty",
+          "conditions": "when username or body is an empty string"
+        },
+        {
+          "status": 400,
+          "message": "Invalid request body",
+          "conditions": "when the request body contains extra fields"
+        },
+        {
+          "status": 400,
+          "message": "bad request",
+          "conditions": "when the article_id is invalid (e.g., not a number)"
+        },
+        {
+          "status": 404,
+          "message": "The Article id: <article_id> does NOT exist",
+          "conditions": "when the article_id does not exist in the database"
+        },
+        {
+          "status": 404,
+          "message": "username not found",
+          "conditions": "when the username does not exist in the database"
+        }
+      ]   
   }
 }

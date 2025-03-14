@@ -7,7 +7,10 @@ const {
 
 const { getAllTopics } = require("./controllers/topics.controllers");
 
-const {getCommentsByArticleId} = require("./controllers/comments.controllers");
+const {
+  getCommentsByArticleId, 
+  postCommentByArticleId
+} = require("./controllers/comments.controllers");
 
 const {
   handleCustomErrors,
@@ -18,6 +21,8 @@ const {
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/api", getApi);
 
 app.get("/api/topics", getAllTopics);
@@ -27,6 +32,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId)
 
 app.all("/*", handleNonExistentEndpoint);
 
