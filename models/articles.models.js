@@ -24,12 +24,12 @@ exports.queryAllArticles = () => {
     });
 };
 
-exports.queryArticlesById = (id) => {
+exports.queryArticlesById = id => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "not found" });
+        return Promise.reject({ status: 404, msg: `The Article id: ${id} does NOT exist` });
       }
       return rows[0];
     });

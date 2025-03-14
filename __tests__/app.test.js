@@ -120,15 +120,16 @@ describe("articles api", () => {
         });
     });
     test("404: responds with an error message if the id is NOT found in the database", () => {
+      const article_id = 99999999
       return request(app)
-        .get("/api/articles/99999999")
+        .get(`/api/articles/${article_id}`)
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("not found");
+          expect(msg).toBe(`The Article id: 99999999 does NOT exist`);
         });
     });
 
-    test("400, responds with an error message if the id is of invalid data type", () => {
+    test("400: responds with an error message if the article id is of invalid data type", () => {
       return request(app)
         .get("/api/articles/banana")
         .expect(400)
@@ -136,6 +137,69 @@ describe("articles api", () => {
           expect(msg).toBe("bad request");
         });
     });
+  });
+
+  describe("/api/articles/:article_id/comments", () => {
+    test("GET 200: responds with an array of comments for the given article_id", () => {
+      return request(app)
+        .get("/api/articles/9/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(2);
+          comments.forEach((comment) => {
+            const {comment_id, votes, created_at, author, body, article_id} = comment
+            expect(typeof comment_id).toBe("number");
+            expect(typeof votes).toBe("number");
+
+            const createdAtDate = new Date(created_at);
+            expect(createdAtDate).toBeInstanceOf(Date);
+            expect(createdAtDate).not.toBeNull();
+
+            expect(typeof author).toBe("string");
+            expect(typeof body).toBe("string");
+            expect(article_id).toBe(9);
+          });
+        });
+    });
+
+    test("GET 200: comments are sorted by created_at in descending order(latest comment first)", () => {
+      return request(app)
+        .get("/api/articles/3/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(2);
+          expect(comments).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+
+    test("GET 200: responds with an empty array when the article has no comments", () => {
+      return request(app)
+        .get("/api/articles/11/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([]);
+        });
+    });
+
+    test("GET 404: responds with an error message when the article_id does not exist", () => {
+      const article_id = 999999
+      return request(app)
+        .get("/api/articles/999999/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(`The Article id: ${article_id} does NOT exist`); 
+        });
+    });
+
+    test("400: responds with an error message if the article id is of invalid data type", () => {
+      return request(app)
+        .get("/api/articles/banana/comments")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("bad request");
+        });
+    });
+    
   });
 });
 
@@ -148,4 +212,4 @@ describe("Path Not Found Error Handler", () => {
         expect(msg).toBe("Path Not Found");
       });
   });
-});
+})
