@@ -7,26 +7,26 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => createTables())
     .then(() => insertTopics(topicData))
     .then(({ rows: topicsRows }) => {
-      console.log("<<< Topics inserted:", topicsRows);
+      // console.log("<<< Topics inserted:", topicsRows);
 
       return insertUsers(userData);
     })
     .then(({rows: usersRows}) => {
-      console.log("<<<< Users inserted:", usersRows);
+      // console.log("<<<< Users inserted:", usersRows);
 
       return insertArticles(articleData);
     })
     .then(({rows: articleRows}) => {
-      console.log("<< articles inserted:", articleRows);
+      // console.log("<< articles inserted:", articleRows);
       return insertComments(commentData, articleRows)
     })
     .then(({rows: commentRows}) => {
-      console.log("<< comment inserted:", commentRows);
+      // console.log("<< comment inserted:", commentRows);
       return;
       
     })
     .catch((error) => {
-      console.error("Error during seeding process:", error);
+      // console.error("Error during seeding process:", error);
       throw error;
     });
 };
