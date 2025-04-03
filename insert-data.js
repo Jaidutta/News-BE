@@ -74,7 +74,7 @@ function insertComments(comments, articlesRows) {
     const articleTitle = formattedComment.article_title;
     const articleId = articleRef[articleTitle];
 
-    console.log(`Attempting to insert comment for article: ${articleTitle}, ID: ${articleId}`);
+    // console.log(`Attempting to insert comment for article: ${articleTitle}, ID: ${articleId}`);
     return [
       articleId, 
       comment.body,
@@ -92,7 +92,7 @@ function insertComments(comments, articlesRows) {
 
   return db.query(insertCommentsQuery)
             .catch((err)=>{
-              console.log(err, "Error when inserting comments");
+              // console.log(err, "Error when inserting comments");
             });
 }
 

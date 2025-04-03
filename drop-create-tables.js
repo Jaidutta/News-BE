@@ -9,7 +9,7 @@ function dropTables() {
 };
 
 function createTables() {
-  console.log("Creating tables...");
+  // console.log("Creating tables...");
 
   return db
     .query(`
@@ -20,7 +20,7 @@ function createTables() {
       );
     `)
     .then(() => {
-      console.log("Topics table created");
+      // console.log("Topics table created");
       return db.query(`
         CREATE TABLE users (
           username VARCHAR(50) PRIMARY KEY,
@@ -30,7 +30,7 @@ function createTables() {
       `);
     })
     .then(() => {
-      console.log("Users table created");
+      // console.log("Users table created");
       return db.query(`
         CREATE TABLE articles (
           article_id SERIAL PRIMARY KEY,
@@ -45,7 +45,7 @@ function createTables() {
       `);
     })
     .then(() => {
-      console.log("Articles table created");
+      // console.log("Articles table created");
       return db.query(`
         CREATE TABLE comments (
           comment_id SERIAL PRIMARY KEY,
@@ -58,11 +58,11 @@ function createTables() {
       `);
     })
     .then(() => {
-      console.log("Comments table created");
-      console.log("All tables created successfully");
+      // console.log("Comments table created");
+      // console.log("All tables created successfully");
     })
     .catch((err) => {
-      console.error("Error creating tables:", err);
+      // console.error("Error creating tables:", err);
       throw err;
     });
 }

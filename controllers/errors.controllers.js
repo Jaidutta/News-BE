@@ -11,9 +11,15 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handlePsqlErrors = (err, req, res, next) => {
-  if (err.code === "22P02" || err.code==='42703'|| err.code==="42601") {
+  if (err.code === "22P02" ) {
     res.status(400).send({ msg: "bad request" });
   }
+  if (err.code === "42703") {
+    res.status(400).send({ msg: "Incorrect parameter entered" });
+  } 
+  if (err.code === "42601") {
+    res.status(400).send({ msg: `Incorrect data was entered`})
+  } 
   next(err);
 };
 
