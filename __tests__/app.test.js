@@ -174,7 +174,7 @@ describe("articles api", () => {
   describe("/api/articles/:article_id", () => {
     test("GET 200: responds with an article object", () => {
       return request(app)
-        .get("/api/articles/2")
+        .get("/api/articles/1")
         .expect(200)
         .then(({ body: { article } }) => {
           const {
@@ -186,19 +186,20 @@ describe("articles api", () => {
             created_at,
             votes,
             article_img_url,
+            comment_count
           } = article;
-          expect(article_id).toBe(2);
+          expect(article_id).toBe(1);
 
-          expect(title).toBe("Sony Vaio; or, The Laptop");
+          expect(title).toBe("Living in the shadow of a great man");
           expect(topic).toBe("mitch");
-          expect(author).toBe("icellusedkars");
-          expect(body).toBe("Call me Mitchell. Some years ago..");
+          expect(author).toBe("butter_bridge");
+          expect(body).toBe("I find this existence challenging");
 
           const createdAtDate = new Date(created_at);
           expect(createdAtDate).toBeInstanceOf(Date);
           expect(createdAtDate).not.toBeNull();
 
-          expect(votes).toBe(0);
+          expect(votes).toBe(100);
           expect(article_img_url).toBe(
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
           );
