@@ -536,6 +536,29 @@ describe("users api", () => {
 
         });
     });
+    describe("GET: /api/users/:username", () => {
+      test("200: retrieves user from users table", () => {
+        return request(app)
+          .get('/api/users/lurker')
+          .expect(200)
+          .then(({ body : {user}}) => {
+            const expectedUser = {
+              username: 'lurker',
+              name: 'do_nothing',
+              avatar_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
+            }
+            expect(user).toMatchObject(expectedUser)
+          })
+      })
+      test("404: error when retrieving non user", () => {
+        return request(app)
+          .get('/api/users/randomuser')
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("no data found")
+          })
+      })
+    })
   });
 })
 
