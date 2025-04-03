@@ -1,6 +1,33 @@
 const db = require("../db/connection");
 
-exports.queryAllArticles = () => {
+exports.queryAllArticles = (sort_by, order) => {
+  const whiteListedSortByColumnInputs = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+
+  const whiteListedOrderInputs = ["asc", "desc"];
+
+  if (!sort_by) {
+    sort_by = "created_at";
+  }
+
+  if (!order) {
+    order = "desc";
+  }
+
+  if (!whiteListedSortByColumnInputs.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid Column Input" });
+  }
+
+  if (!whiteListedOrderInputs.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid Sort Order Input" });
+  }
   return db
     .query(
       `
@@ -16,7 +43,7 @@ exports.queryAllArticles = () => {
       FROM articles
       LEFT JOIN comments ON articles.article_id = comments.article_id
       GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;
+      ORDER BY articles.${sort_by} ${order};
     `
     )
     .then(({ rows }) => {
